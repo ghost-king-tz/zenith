@@ -6,12 +6,12 @@ const toBool = (value) => value === "true";
 
 // Owner & Bot Details
 global.owner = process.env.OWNER_NUMBER;
-global.anitav4 = process.env.BOT_NAME || "𝐐𝐔𝐄𝐄𝐍_𝐀𝐍𝐈𝐓𝐀-𝐕𝟒";
-global.ownername = process.env.OWNER_NAME || "David Cyril";
-global.packname = process.env.PACK_NAME || "𝐐𝐔𝐄𝐄𝐍_𝐀𝐍𝐈𝐓𝐀-𝐕𝟒";
-global.author = process.env.AUTHOR || "𝐃𝐀𝐕𝐈𝐃 𝐂𝐘𝐑𝐈𝐋";
-global.channelname = process.env.CHANNEL_NAME || "𝐃𝐀𝐕𝐈𝐃 𝐂𝐘𝐑𝐈𝐋";
-global.channeljid = process.env.CHANNEL_JID || "120363315231436175@newsletter";
+global.anitav4 = process.env.BOT_NAME || "𝐙𝐄𝐍𝐈𝐓𝐇-𝐕𝟒";
+global.ownername = process.env.OWNER_NAME || "Ghost king";
+global.packname = process.env.PACK_NAME || "𝐙𝐄𝐍𝐈𝐓𝐇-𝐕𝟒";
+global.author = process.env.AUTHOR || "𝐆𝐇𝐎𝐒𝐓 𝐊𝐈𝐍𝐆";
+global.channelname = process.env.CHANNEL_NAME || "𝐆𝐇𝐎𝐒𝐓 𝐊𝐈𝐍𝐆";
+global.channeljid = process.env.CHANNEL_JID || "0029VbAvB6k9sBI7O0j74q2N@newsletter";
 
 // Auto-Features
 global.autoTyping = toBool(process.env.AUTO_TYPING);
