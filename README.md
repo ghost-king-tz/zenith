@@ -1,4 +1,6 @@
 # 𝐙𝐄𝐍𝐈𝐓𝐇-𝐕𝟒
+_Wake up to reality. 
+Nothing ever goes as planned in this accursed world_
 <a><img src='https://i.imgur.com/LyHic3i.gif'/></a><a><img src='https://i.imgur.com/LyHic3i.gif'/></a>
 
 <p align="center"> 
@@ -6,7 +8,7 @@
 </p>
 
 <p align="center">
-<img src="https://files.catbox.moe/r26uwc.jpg"/>      
+<img src="https://files.catbox.moe/h4vr2y.jpg"/>      
 </p>
 
 <p align="center">
