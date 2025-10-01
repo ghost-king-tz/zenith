@@ -19,6 +19,19 @@ Nothing ever goes as planned in this accursed world_
 <a href="#"><img title="Creator" src="https://img.shields.io/badge/Creator-𝐆𝐇𝐎𝐒𝐓 𝐊𝐈𝐍𝐆-red.svg?style=for-the-badge&logo=github"></a>
 </p>
 
+<!-- GitHub Stats Badges -->
+<p align="center">
+  <a href="https://github.com/ghost-king-tz/zenith">
+    <img src="https://img.shields.io/github/forks/ghost-king-tz/zenith?style=for-the-badge&logo=github&color=blue" alt="Forks">
+  </a>
+  <a href="https://github.com/ghost-king-tz/zenith/stargazers">
+    <img src="https://img.shields.io/github/stars/ghost-king-tz/zenith?style=for-the-badge&logo=github&color=yellow" alt="Stars">
+  </a>
+  <a href="https://github.com/ghost-king-tz/zenith/watchers">
+    <img src="https://img.shields.io/github/watchers/ghost-king-tz/zenith?style=for-the-badge&logo=github&color=green" alt="Watchers">
+  </a>
+</p>
+
 <a><img src='https://i.imgur.com/LyHic3i.gif'/></a><a><img src='https://i.imgur.com/LyHic3i.gif'/></a>
 
 ---
@@ -29,7 +42,7 @@ Nothing ever goes as planned in this accursed world_
 2. **Get SESSION ID BY ➤ [PAIRING CODE](https://pair.david-cyril.net.ng)** 
 3. **Deploy on [HEROKU](https://dashboard.heroku.com/new?template=https://github.com/ghost-king-tz/zenith.git)**
 4. **Deploy on [RENDER](https://dashboard.render.com/signup)**
-5. **Deploy on [KOYEB](https://app.koyeb.com/services/deploy/?type=git&repository=github.com%2Fghost-king-tz%2Fzenith&branch=main&name=zenith&builder=dockerfile&env%5BAUTO_STATUS_REACT=false%5D=&env%5BSESSION_ID%5D=your%20sessionid%20here&env%5BPUBLIC%5D=true&env=%5BAUTO_TYPING%5D%3Dfalse&env%5BAUTO_STATUS_VIEW%5D=true)**
+5. **Deploy on [KOYEB](https://app.koyeb.com/services/deploy/?type=git&repository=https://github.com/ghost-king-tz/zenith&branch=main&name=zenith&builder=dockerfile&env%5BAUTO_STATUS_REACT=false%5D=&env%5BSESSION_ID%5D=your%20sessionid%20here&env%5BPUBLIC%5D=true&env=%5BAUTO_TYPING%5D%3Dfalse&env%5BAUTO_STATUS_VIEW%5D=true)**
 6. **Deploy on [TALKDROVE](https://host.talkdrove.com)**
 7. **Deploy on [BOT HOSTING PANEL (DISCORD)](https://bot-hosting.net/?aff=1251693529084723300)**
 8. **Deploy on [KATBUMP PANEL (DISCORD)](https://dashboard.katabump.com/auth/login#1ae56c)**
