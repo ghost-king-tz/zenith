@@ -17,7 +17,7 @@ const logger = pino({ level: 'info' });
 const CONFIG = {
   prefix: '.',   // prefix ya commands zako
   owner: ['255719632816@s.whatsapp.net'], // badilisha na namba yako
-  commandsDir: path.join(__dirname, 'commands'),
+  commandsDir: path.join(__dirname, 'lib'),
   reconnectInterval: 5000
 };
 // =====================
