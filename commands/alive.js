@@ -4,7 +4,7 @@ async function aliveCommand(sock, chatId, message) {
     try {
         // Tuma picha yenye caption ya alive
         await sock.sendMessage(chatId, {
-            image: { url: 'https://files.catbox.moe/w0vmvc.jpg' }, 
+            image: { url: 'https://files.catbox.moe/h4vr2y.jpg' }, 
             caption: `
 ═══════════════
 𝐒𝐏𝐄𝐂𝐓𝐑𝐀-𝐕2 🤖: STATUS [ ONLINE ]*
