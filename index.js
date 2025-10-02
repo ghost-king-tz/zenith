@@ -1,9 +1,10 @@
 const {
   default: makeWASocket,
   DisconnectReason,
-  useMultiFileAuthState,
   fetchLatestBaileysVersion,
-  jidNormalizedUser
+  jidNormalizedUser,
+  useMultiFileAuthState,
+  useSingleFileAuthState
 } = require('@whiskeysockets/baileys');
 
 const pino = require('pino');
@@ -16,8 +17,8 @@ const logger = pino({ level: 'info' });
 // ====== CONFIG ======
 const CONFIG = {
   prefix: '.',   // prefix ya commands zako
-  owner: ['255719632816@s.whatsapp.net'], // badilisha na namba yako
-  commandsDir: path.join(__dirname, 'commands'),
+  owner: ['255719632816@s.whatsapp.net'], // namba yako ya WhatsApp
+  commandsDir: path.join(__dirname, 'lib'),  // sasa inasoma lib/
   reconnectInterval: 5000
 };
 // =====================
@@ -50,7 +51,19 @@ function loadCommands() {
 
 // Main function
 async function startSock() {
-  const { state, saveCreds } = await useMultiFileAuthState('./session');
+  let auth;
+  
+  if (process.env.SESSION_ID) {
+    // 🔑 Heroku mode: tumia SESSION_ID env var
+    const { state, saveState } = useSingleFileAuthState('./session.json');
+    fs.writeFileSync('./session.json', Buffer.from(process.env.SESSION_ID, 'base64').toString('utf-8'));
+    auth = state;
+  } else {
+    // Local mode: tumia multi-file auth
+    const { state, saveCreds } = await useMultiFileAuthState('./session');
+    auth = state;
+    sock.ev.on('creds.update', saveCreds);
+  }
 
   const { version } = await fetchLatestBaileysVersion();
   logger.info('Using Baileys v' + version.join('.'));
@@ -58,11 +71,9 @@ async function startSock() {
   const sock = makeWASocket({
     logger: pino({ level: 'silent' }),
     printQRInTerminal: true,
-    auth: state,
+    auth,
     version
   });
-
-  sock.ev.on('creds.update', saveCreds);
 
   sock.ev.on('connection.update', (update) => {
     const { connection, lastDisconnect } = update;
@@ -98,7 +109,7 @@ async function startSock() {
     body = body.trim();
     if (!body.startsWith(CONFIG.prefix)) return;
 
-    const args = body.slice(CONFIG.prefix.length).trim().split(/\\s+/);
+    const args = body.slice(CONFIG.prefix.length).trim().split(/\s+/);
     const cmdName = args.shift().toLowerCase();
 
     const cmd = commands.get(cmdName);
