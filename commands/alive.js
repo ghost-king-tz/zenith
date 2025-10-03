@@ -1,35 +1,26 @@
-const settings = require("../settings");
+const quotes = [
+  "Wake up to reality. Nothing ever goes as planned.",
+  "Zenith-V4 never sleeps 😎",
+  "Your favorite bot is Alive! 🚀",
+  "Bots are the future 🤖",
+  "Stay cool, stay Zenith 💠"
+];
 
-async function aliveCommand(sock, chatId, message) {
-    try {
-        // Tuma picha yenye caption ya alive
-        await sock.sendMessage(chatId, {
-            image: { url: 'https://files.catbox.moe/h4vr2y.jpg' }, 
-            caption: `
-═══════════════
-𝐒𝐏𝐄𝐂𝐓𝐑𝐀-𝐕2 🤖: STATUS [ ONLINE ]*
-Version: ${settings.version}
+module.exports = {
+  name: "alive",
+  async execute(sock, msg) {
+    const chatId = msg.key.remoteJid;
+    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 
-“Wake up to reality. 
-Nothing ever goes as planned in this accursed world.” 🕶️
+    await sock.sendMessage(chatId, {
+      image: { url: 'https://files.catbox.moe/h4vr2y.jpg' },
+      caption: `✅ Zenith-V4 is Alive!\n\n"${randomQuote}"`
+    }, { quoted: msg });
 
-𝐒𝐏𝐄𝐂𝐓𝐑𝐀-𝐕2 Engine Is Alive Now 👨‍💻
-═══════════════
-Type *.menu* To see all commands 💣.
-`
-        }, { quoted: message });
-
-        // Tuma audio kama PTT (voice note)
-        await sock.sendMessage(chatId, {
-            audio: { url: 'https://files.catbox.moe/9bj10g.mp3' },
-            mimetype: 'audio/mpeg',
-            ptt: true
-        }, { quoted: message });
-
-    } catch (error) {
-        console.error('Error in alive command:', error);
-        await sock.sendMessage(chatId, { text: '𝐒𝐏𝐄𝐂𝐓𝐑𝐀-𝐕2 iko hewani!' }, { quoted: message });
-    }
+    await sock.sendMessage(chatId, {
+      audio: { url: 'https://files.catbox.moe/1vkxii.mp3' },
+      mimetype: 'audio/mpeg',
+      ptt: true
+    }, { quoted: msg });
+  }
 }
-
-module.exports = aliveCommand;
