@@ -1,20 +1,25 @@
 module.exports = {
-  name: 'ping',
-  aliases: ['p'],
-  description: 'Check if ZENITH-V4 bot is responsive',
-  ownerOnly: false,
-  async execute(sock, msg, args, extra) {
+  name: "ping",
+  async execute(sock, msg) {
     const chatId = msg.key.remoteJid;
+    const start = Date.now();
 
-    try {
-      const start = Date.now();
-      const sentMsg = await sock.sendMessage(chatId, { text: 'Pinging... ⏳' }, { quoted: msg });
-      const latency = Date.now() - start;
+    await sock.sendMessage(chatId, {
+      image: { url: 'https://files.catbox.moe/h4vr2y.jpg' },
+      caption: "🏓 Testing Ping..."
+    }, { quoted: msg });
 
-      await sock.sendMessage(chatId, { text: `Pong! 🏓\nResponse Time: ${latency}ms` }, { quoted: sentMsg });
-    } catch (error) {
-      console.error('Error in ping command:', error);
-      await sock.sendMessage(chatId, { text: 'Error: Could not ping ZENITH-V4!' }, { quoted: msg });
-    }
+    const end = Date.now();
+    const speed = end - start;
+
+    await sock.sendMessage(chatId, {
+      text: `⏱ Response time: ${speed}ms`
+    }, { quoted: msg });
+
+    await sock.sendMessage(chatId, {
+      audio: { url: 'https://files.catbox.moe/1vkxii.mp3' },
+      mimetype: 'audio/mpeg',
+      ptt: true
+    }, { quoted: msg });
   }
-};
+}
