@@ -18,7 +18,7 @@ const logger = pino({ level: 'info' });
 const CONFIG = {
   prefix: '.',   // prefix ya commands zako
   owner: ['255719632816@s.whatsapp.net'], // namba yako ya WhatsApp
-  commandsDir: path.join(__dirname, 'lib'),  // sasa inasoma lib/
+  commandsDir: path.join(__dirname, 'commands'),  // sasa inasoma lib/
   reconnectInterval: 5000
 };
 // =====================
