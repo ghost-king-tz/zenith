@@ -17,56 +17,71 @@ const logger = pino({ level: 'info' });
 // ====== CONFIG ======
 const CONFIG = {
   prefix: '.',   // prefix ya commands zako
-  owner: ['255719632816@s.whatsapp.net'], // namba yako ya WhatsApp
-  commandsDir: path.join(__dirname, 'commands'),  // sasa inasoma lib/
+  owner: ['255719632816@s.whatsapp.net'], // badilisha na namba yako
+  commandsDirs: [
+    path.join(__dirname, 'commands'),
+    path.join(__dirname, 'lib')
+  ],
   reconnectInterval: 5000
 };
 // =====================
 
 const commands = new Map();
 
-// Load commands zote
+// Load all commands from multiple folders
 function loadCommands() {
   commands.clear();
-  if (!fs.existsSync(CONFIG.commandsDir)) fs.mkdirSync(CONFIG.commandsDir, { recursive: true });
-  const files = fs.readdirSync(CONFIG.commandsDir).filter(f => f.endsWith('.js'));
-  for (const file of files) {
-    try {
-      const full = path.join(CONFIG.commandsDir, file);
-      delete require.cache[require.resolve(full)];
-      const cmd = require(full);
-      if (!cmd || !cmd.name || typeof cmd.execute !== 'function') {
-        logger.warn(`Skipping invalid command file: ${file}`);
-        continue;
+  for (const dir of CONFIG.commandsDirs) {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+      continue;
+    }
+
+    const files = fs.readdirSync(dir).filter(f => f.endsWith('.js'));
+    for (const file of files) {
+      try {
+        const full = path.join(dir, file);
+        delete require.cache[require.resolve(full)];
+        const cmd = require(full);
+        if (!cmd || !cmd.name || typeof cmd.execute !== 'function') {
+          logger.warn(`⚠️ Skipping invalid command: ${file}`);
+          continue;
+        }
+        cmd.aliases = cmd.aliases || [];
+        commands.set(cmd.name, cmd);
+        for (const a of cmd.aliases) commands.set(a, cmd);
+        logger.info(`✅ Loaded: ${cmd.name}`);
+      } catch (e) {
+        logger.error(`❌ Error loading ${file}: ${e.message}`);
       }
-      cmd.aliases = cmd.aliases || [];
-      commands.set(cmd.name, cmd);
-      for (const a of cmd.aliases) commands.set(a, cmd);
-      logger.info(`Loaded command: ${cmd.name}`);
-    } catch (e) {
-      logger.error(`Error loading ${file}: ${e.message}`);
     }
   }
+
+  logger.info(`💾 Total commands loaded: ${commands.size}`);
 }
 
-// Main function
+// ====== MAIN FUNCTION ======
 async function startSock() {
   let auth;
-  
+  const sessionPath = './session.json';
+
   if (process.env.SESSION_ID) {
-    // 🔑 Heroku mode: tumia SESSION_ID env var
-    const { state, saveState } = useSingleFileAuthState('./session.json');
-    fs.writeFileSync('./session.json', Buffer.from(process.env.SESSION_ID, 'base64').toString('utf-8'));
-    auth = state;
+    try {
+      const sessionData = Buffer.from(process.env.SESSION_ID, 'base64').toString('utf-8');
+      fs.writeFileSync(sessionPath, sessionData);
+      const { state, saveState } = useSingleFileAuthState(sessionPath);
+      auth = state;
+    } catch (err) {
+      logger.error('❌ Error decoding SESSION_ID: ' + err.message);
+      process.exit(1);
+    }
   } else {
-    // Local mode: tumia multi-file auth
     const { state, saveCreds } = await useMultiFileAuthState('./session');
     auth = state;
-    sock.ev.on('creds.update', saveCreds);
   }
 
   const { version } = await fetchLatestBaileysVersion();
-  logger.info('Using Baileys v' + version.join('.'));
+  logger.info('📦 Using Baileys v' + version.join('.'));
 
   const sock = makeWASocket({
     logger: pino({ level: 'silent' }),
@@ -75,15 +90,17 @@ async function startSock() {
     version
   });
 
+  sock.ev.on('creds.update', saveCreds);
+  
   sock.ev.on('connection.update', (update) => {
     const { connection, lastDisconnect } = update;
     if (connection === 'close') {
       const reason = lastDisconnect?.error?.output?.statusCode;
       if (reason === DisconnectReason.loggedOut) {
-        logger.error('Logged out, delete session and scan QR again.');
+        logger.error('❌ Logged out, scan QR again.');
         process.exit(0);
       } else {
-        logger.warn('Reconnecting...');
+        logger.warn('🔁 Reconnecting...');
         setTimeout(startSock, CONFIG.reconnectInterval);
       }
     } else if (connection === 'open') {
@@ -91,7 +108,7 @@ async function startSock() {
     }
   });
 
-  // Handle messages
+  // ====== MESSAGE HANDLER ======
   sock.ev.on('messages.upsert', async (m) => {
     const msg = m.messages[0];
     if (!msg.message) return;
@@ -117,15 +134,15 @@ async function startSock() {
 
     // Owner only?
     if (cmd.ownerOnly && !CONFIG.owner.includes(sender)) {
-      await sock.sendMessage(from, { text: '🚫 Owner only command!' }, { quoted: msg });
+      await sock.sendMessage(from, { text: '🚫 This command is for the owner only!' }, { quoted: msg });
       return;
     }
 
     try {
       await cmd.execute(sock, msg, args, { commands, CONFIG });
     } catch (err) {
-      logger.error('Command error: ' + err.message);
-      await sock.sendMessage(from, { text: '⚠️ Error: ' + err.message }, { quoted: msg });
+      logger.error('⚠️ Command error: ' + err.message);
+      await sock.sendMessage(from, { text: '⚠️ Error executing command: ' + err.message }, { quoted: msg });
     }
   });
 }
